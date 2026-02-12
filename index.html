@@ -1,498 +1,672 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$BAIT | The Viral Debate Protocol</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$BAIT | The Viral Debate Protocol</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        heading: ['"Bangers"', 'cursive'],
-                        body: ['"Inter"', 'sans-serif'],
-                    },
-                    colors: {
-                        'bait-red': '#FF0033',
-                        'bait-orange': '#FF4D00',
-                        'bait-gold': '#FFD700',
-                        'bait-dark': '#0f0505',
-                        'bait-card': '#1a0a0a',
-                    },
-                    backgroundImage: {
-                        'fire-gradient': 'linear-gradient(135deg, #FF0033 0%, #FF4D00 100%)',
-                        'gold-gradient': 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'wiggle': 'wiggle 2s linear infinite',
-                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' },
-                        },
-                        wiggle: {
-                            '0%, 100%': { transform: 'rotate(-3deg)' },
-                            '50%': { transform: 'rotate(3deg)' },
-                        }
-                    }
-                }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Bangers"', 'cursive'],
+            body: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            'bait-red': '#FF0033',
+            'bait-orange': '#FF4D00',
+            'bait-gold': '#FFD700',
+            'bait-dark': '#0f0505',
+            'bait-card': '#1a0a0a',
+          },
+          backgroundImage: {
+            'fire-gradient': 'linear-gradient(135deg, #FF0033 0%, #FF4D00 100%)',
+            'gold-gradient': 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'wiggle': 'wiggle 2s linear infinite',
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-15px)' },
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-3deg)' },
+              '50%': { transform: 'rotate(3deg)' },
             }
+          }
         }
-    </script>
+      }
+    }
+  </script>
 
-    <style>
-        /* GLOBAL STYLES */
-        body {
-            background-color: #0f0505;
-            color: white;
-            overflow-x: hidden;
-        }
+  <style>
+    body {
+      background-color: #0f0505;
+      color: white;
+      overflow-x: hidden;
+    }
 
-        /* EMBERS PARTICLE EFFECT */
-        .ember {
-            position: fixed;
-            bottom: -10vh;
-            width: 4px;
-            height: 4px;
-            background: #FF4D00;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #FF0033;
-            animation: rise linear infinite;
-            z-index: -1;
-            opacity: 0;
-        }
-        @keyframes rise {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120vh) scale(0); opacity: 0; }
-        }
+    /* EMBERS PARTICLE EFFECT */
+    .ember {
+      position: fixed;
+      bottom: -10vh;
+      width: 4px;
+      height: 4px;
+      background: #FF4D00;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #FF0033;
+      animation: rise linear infinite;
+      z-index: -1;
+      opacity: 0;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-120vh) scale(0); opacity: 0; }
+    }
 
-        /* GLASS CARDS */
-        .glass-card {
-            background: rgba(20, 5, 5, 0.8);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 77, 0, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.2s ease;
-        }
-        .glass-card:hover {
-            border-color: #FFD700;
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(255, 77, 0, 0.3);
-        }
+    /* GLASS CARDS */
+    .glass-card {
+      background: rgba(20, 5, 5, 0.8);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 77, 0, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: #FFD700;
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(255, 77, 0, 0.3);
+    }
 
-        /* TEXT OUTLINE */
-        .text-outline {
-            -webkit-text-stroke: 1px black;
-            text-shadow: 3px 3px 0px #FF0033;
-        }
+    /* TEXT OUTLINE */
+    .text-outline {
+      -webkit-text-stroke: 1px black;
+      text-shadow: 3px 3px 0px #FF0033;
+    }
 
-        /* BUTTONS */
-        .btn-fire {
-            background: linear-gradient(180deg, #FF4D00, #FF0033);
-            border: 2px solid #FFD700;
-            color: white;
-            font-family: 'Bangers', cursive;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 1.25rem;
-            padding: 12px 30px;
-            border-radius: 12px;
-            box-shadow: 0 6px 0 #990000;
-            transition: all 0.1s;
-        }
-        .btn-fire:active {
-            transform: translateY(6px);
-            box-shadow: 0 0 0 #990000;
-        }
-        .btn-fire:hover {
-            filter: brightness(1.1);
-        }
-
-        /* VOTING BAR */
-        .vote-bar-container {
-            width: 100%;
-            height: 40px;
-            background: #333;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-        }
-        .vote-fill-red {
-            height: 100%;
-            background: #FF0033;
-            width: 50%;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-    </style>
+    /* BUTTONS */
+    .btn-fire {
+      background: linear-gradient(180deg, #FF4D00, #FF0033);
+      border: 2px solid #FFD700;
+      color: white;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 1.25rem;
+      padding: 12px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 0 #990000;
+      transition: all 0.1s;
+    }
+    .btn-fire:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #990000;
+    }
+    .btn-fire:hover {
+      filter: brightness(1.1);
+    }
+  </style>
 </head>
+
 <body class="font-body selection:bg-bait-red selection:text-white">
+  <div id="ember-container"></div>
 
-    <div id="ember-container"></div>
+  <!-- NAV -->
+  <nav class="fixed w-full z-50 py-4 px-4 bg-bait-dark/90 backdrop-blur-md border-b border-bait-red/20 transition-all duration-300">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="#" class="flex items-center gap-2 group">
+        <img src="bait-hero.png" alt="Bait Logo" class="w-10 h-10 rounded-full border-2 border-bait-gold shadow-[0_0_15px_#FF4D00]">
+        <span class="font-heading text-3xl tracking-wide text-white group-hover:text-bait-red transition">$BAIT</span>
+      </a>
 
-    <nav class="fixed w-full z-50 py-4 px-4 bg-bait-dark/90 backdrop-blur-md border-b border-bait-red/20 transition-all duration-300">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="flex items-center gap-2 group">
-                <img src="bait-hero.png" alt="Bait Logo" class="w-10 h-10 rounded-full border-2 border-bait-gold shadow-[0_0_15px_#FF4D00]">
-                <span class="font-heading text-3xl tracking-wide text-white group-hover:text-bait-red transition">$BAIT</span>
-            </a>
-            
-            <div class="hidden md:flex gap-8 items-center font-heading text-xl tracking-widest uppercase">
-                <a href="#concept" class="hover:text-bait-gold transition text-bait-red">The Concept</a>
-                <a href="#demo" class="hover:text-bait-gold transition">App Demo</a>
-                <a href="#narrative" class="hover:text-bait-gold transition">Narrative</a>
-                <a href="#roadmap" class="hover:text-bait-gold transition">Roadmap</a>
-            </div>
+      <div class="hidden md:flex gap-8 items-center font-heading text-xl tracking-widest uppercase">
+        <a href="#concept" class="hover:text-bait-gold transition text-bait-red">The Concept</a>
+        <a href="#demo" class="hover:text-bait-gold transition">App Demo</a>
+        <a href="#narrative" class="hover:text-bait-gold transition">Narrative</a>
+        <a href="#roadmap" class="hover:text-bait-gold transition">Roadmap</a>
+      </div>
 
-            <div class="flex items-center gap-4">
-                <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e" target="_blank" class="btn-fire text-lg px-4 py-2 md:px-6 md:py-2">
-                    BUY NOW
-                </a>
-                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-bait-gold focus:outline-none">
-                    <i data-lucide="menu" class="w-8 h-8"></i>
-                </button>
-            </div>
+      <div class="flex items-center gap-4">
+        <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e"
+           target="_blank"
+           class="btn-fire text-lg px-4 py-2 md:px-6 md:py-2">
+          BUY NOW
+        </a>
+        <button id="mobile-menu-btn" class="md:hidden text-white hover:text-bait-gold focus:outline-none">
+          <i data-lucide="menu" class="w-8 h-8"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-bait-card border-t border-bait-red/20 absolute top-full left-0 w-full p-6 flex flex-col gap-4 text-center shadow-xl">
+      <a href="#concept" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">The Concept</a>
+      <a href="#demo" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">App Demo</a>
+      <a href="#narrative" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Narrative</a>
+      <a href="#roadmap" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Roadmap</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="relative min-h-screen flex items-center justify-center pt-24 px-4 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="bait.png" alt="Background" class="w-full h-full object-cover opacity-30 filter blur-sm">
+      <div class="absolute inset-0 bg-gradient-to-t from-bait-dark via-bait-dark/80 to-transparent"></div>
+    </div>
+
+    <div class="container mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div class="text-center lg:text-left order-2 lg:order-1" data-aos="fade-up">
+        <div class="inline-block bg-bait-red/20 border border-bait-red px-4 py-1 rounded-full mb-6 transform -rotate-2">
+          <span class="text-bait-gold font-heading text-xl tracking-wider animate-pulse-fast">⚠️ Don't Take The Bait</span>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-bait-card border-t border-bait-red/20 absolute top-full left-0 w-full p-6 flex flex-col gap-4 text-center shadow-xl">
-            <a href="#concept" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">The Concept</a>
-            <a href="#demo" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">App Demo</a>
-            <a href="#narrative" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Narrative</a>
-            <a href="#roadmap" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Roadmap</a>
-        </div>
-    </nav>
+        <h1 class="font-heading text-6xl md:text-8xl lg:text-9xl leading-[0.9] mb-6 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
+          <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">$BAIT</span> <br>
+          IS LOADING...
+        </h1>
 
-    <header class="relative min-h-screen flex items-center justify-center pt-24 px-4 overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img src="bait.png" alt="Background" class="w-full h-full object-cover opacity-30 filter blur-sm">
-            <div class="absolute inset-0 bg-gradient-to-t from-bait-dark via-bait-dark/80 to-transparent"></div>
-        </div>
+        <p class="text-gray-300 text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0 font-bold leading-relaxed border-l-4 border-bait-gold pl-4">
+          Smart money doesn't chase noise — it positions early.
+          <span class="text-bait-red">Before the run comes the silence... then the explosion.</span>
+        </p>
 
-        <div class="container mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
-            <div class="text-center lg:text-left order-2 lg:order-1" data-aos="fade-up">
-                <div class="inline-block bg-bait-red/20 border border-bait-red px-4 py-1 rounded-full mb-6 transform -rotate-2">
-                    <span class="text-bait-gold font-heading text-xl tracking-wider animate-pulse-fast">⚠️ Don't Take The Bait</span>
-                </div>
-                
-                <h1 class="font-heading text-6xl md:text-8xl lg:text-9xl leading-[0.9] mb-6 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">$BAIT</span> <br>
-                    IS LOADING...
-                </h1>
-                
-                <p class="text-gray-300 text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0 font-bold leading-relaxed border-l-4 border-bait-gold pl-4">
-                    Smart money doesn't chase noise — it positions early. 
-                    <span class="text-bait-red">Before the run comes the silence... then the explosion.</span>
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="https://t.me/+JDZzlWPoMwA0MWEx" target="_blank" class="btn-fire">
-                        JOIN TELEGRAM
-                    </a>
-                    <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e" target="_blank" class="glass-card px-8 py-3 flex items-center justify-center gap-2 font-heading text-xl hover:bg-white/10 cursor-pointer text-white border-2 border-transparent hover:border-white transition-all">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Moonshot_Logo.png" class="w-6 h-6 grayscale invert" alt=""> 
-                        Moonshot
-                    </a>
-                </div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="https://t.me/+JDZzlWPoMwA0MWEx" target="_blank" class="btn-fire">
+            JOIN TELEGRAM
+          </a>
+          <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e"
+             target="_blank"
+             class="glass-card px-8 py-3 flex items-center justify-center gap-2 font-heading text-xl hover:bg-white/10 cursor-pointer text-white border-2 border-transparent hover:border-white transition-all">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Moonshot_Logo.png" class="w-6 h-6 grayscale invert" alt="">
+            Moonshot
+          </a>
+        </div>
+      </div>
+
+      <div class="order-1 lg:order-2 flex justify-center relative" data-aos="zoom-in" data-aos-delay="200">
+        <div class="relative w-[280px] md:w-[400px] lg:w-[500px] animate-float">
+          <div class="absolute inset-0 bg-bait-red blur-[100px] opacity-40"></div>
+          <img src="bait-hero.png" alt="Bait Fish" class="relative z-10 rounded-3xl border-4 border-bait-gold shadow-2xl w-full h-auto object-cover transform rotate-2 hover:rotate-0 transition duration-500">
+
+          <div class="absolute -bottom-6 -right-6 glass-card p-4 animate-wiggle z-20 bg-black border-bait-gold">
+            <p class="font-heading text-3xl text-bait-gold">100X</p>
+            <p class="text-xs text-white font-bold uppercase">Potential</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONCEPT -->
+  <section id="concept" class="py-20 relative bg-bait-card/50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">THE <span class="text-bait-gold">CONCEPT</span></h2>
+        <p class="text-gray-400 font-bold text-lg max-w-2xl mx-auto">The "Wordle for Debates" - Simple, Addictive, Viral.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="glass-card p-6 border-l-4 border-bait-red">
+            <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="flame" class="text-bait-orange"></i> One Daily Question</h3>
+            <p class="text-gray-300">Everyone reacts to one shared "bait" question daily. Controversial, thought-provoking, and impossible to ignore.</p>
+          </div>
+          <div class="glass-card p-6 border-l-4 border-bait-gold">
+            <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="refresh-cw" class="text-bait-gold"></i> Rotating Rules</h3>
+            <p class="text-gray-300">New day, new rules. Strict word limits, draw-only responses, or timed answers keep the game fresh and challenging.</p>
+          </div>
+          <div class="glass-card p-6 border-l-4 border-bait-orange">
+            <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="trophy" class="text-bait-orange"></i> Compete & Win</h3>
+            <p class="text-gray-300">Pick a side, vote on others, and climb the leaderboard. Earn daily high scores, streaks, and badges.</p>
+          </div>
+        </div>
+        <div class="relative" data-aos="fade-left">
+          <div class="glass-card p-8 text-center relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-br from-bait-red/20 to-transparent z-0"></div>
+            <i data-lucide="smartphone" class="w-24 h-24 text-white mx-auto mb-4 relative z-10 opacity-80"></i>
+            <h3 class="font-heading text-3xl text-white relative z-10">Web App Launching Soon</h3>
+            <p class="text-gray-400 mt-2 relative z-10 text-sm">Focus on fun, fast debates without burnout.</p>
+            <div class="mt-6 flex justify-center gap-2 relative z-10">
+              <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Culture</span>
+              <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Opinions</span>
+              <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Trends</span>
             </div>
-
-            <div class="order-1 lg:order-2 flex justify-center relative" data-aos="zoom-in" data-aos-delay="200">
-                <div class="relative w-[280px] md:w-[400px] lg:w-[500px] animate-float">
-                    <div class="absolute inset-0 bg-bait-red blur-[100px] opacity-40"></div>
-                    <img src="bait-hero.png" alt="Bait Fish" class="relative z-10 rounded-3xl border-4 border-bait-gold shadow-2xl w-full h-auto object-cover transform rotate-2 hover:rotate-0 transition duration-500">
-                    
-                    <div class="absolute -bottom-6 -right-6 glass-card p-4 animate-wiggle z-20 bg-black border-bait-gold">
-                        <p class="font-heading text-3xl text-bait-gold">100X</p>
-                        <p class="text-xs text-white font-bold uppercase">Potential</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </section>
 
-    <section id="concept" class="py-20 relative bg-bait-card/50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">THE <span class="text-bait-gold">CONCEPT</span></h2>
-                <p class="text-gray-400 font-bold text-lg max-w-2xl mx-auto">The "Wordle for Debates" - Simple, Addictive, Viral.</p>
-            </div>
+  <!-- DEMO (UPDATED GAME MECHANIC) -->
+  <section id="demo" class="py-20 bg-bait-card border-y-4 border-bait-gold relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full bg-bait-gold text-black py-2 transform -rotate-1 scale-105 z-10">
+      <div class="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] font-heading text-xl gap-8">
+        <span>🔥 DAILY BAIT DEMO</span> <span>•</span> <span>PICK A SIDE</span> <span>•</span> <span>DROP 5 WORDS</span>
+        <span>•</span> <span>AGREE / DISAGREE</span> <span>•</span> <span>🔥 DAILY BAIT DEMO</span>
+      </div>
+    </div>
+    <style>@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }</style>
 
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8" data-aos="fade-right">
-                    <div class="glass-card p-6 border-l-4 border-bait-red">
-                        <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="flame" class="text-bait-orange"></i> One Daily Question</h3>
-                        <p class="text-gray-300">Everyone reacts to one shared "bait" question daily. Controversial, thought-provoking, and impossible to ignore.</p>
-                    </div>
-                    <div class="glass-card p-6 border-l-4 border-bait-gold">
-                        <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="refresh-cw" class="text-bait-gold"></i> Rotating Rules</h3>
-                        <p class="text-gray-300">New day, new rules. Strict word limits, draw-only responses, or timed answers keep the game fresh and challenging.</p>
-                    </div>
-                    <div class="glass-card p-6 border-l-4 border-bait-orange">
-                        <h3 class="font-heading text-2xl text-white mb-2 flex items-center gap-2"><i data-lucide="trophy" class="text-bait-orange"></i> Compete & Win</h3>
-                        <p class="text-gray-300">Pick a side, vote on others, and climb the leaderboard. Earn daily high scores, streaks, and badges.</p>
-                    </div>
-                </div>
-                <div class="relative" data-aos="fade-left">
-                    <div class="glass-card p-8 text-center relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-gradient-to-br from-bait-red/20 to-transparent z-0"></div>
-                        <i data-lucide="smartphone" class="w-24 h-24 text-white mx-auto mb-4 relative z-10 opacity-80"></i>
-                        <h3 class="font-heading text-3xl text-white relative z-10">Web App Launching Soon</h3>
-                        <p class="text-gray-400 mt-2 relative z-10 text-sm">Focus on fun, fast debates without burnout.</p>
-                        <div class="mt-6 flex justify-center gap-2 relative z-10">
-                            <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Culture</span>
-                            <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Opinions</span>
-                            <span class="px-3 py-1 bg-white/10 rounded text-xs font-bold border border-white/20">Trends</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="container mx-auto px-4 mt-12 text-center">
+      <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">TRY THE <span class="text-bait-red">GAME</span></h2>
+      <p class="text-gray-400 mb-12 max-w-2xl mx-auto font-bold">
+        One daily hot take. Pick a side. Optional 5-word reason. Then see what everyone else said.
+      </p>
 
-    <section id="demo" class="py-20 bg-bait-card border-y-4 border-bait-gold relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full bg-bait-gold text-black py-2 transform -rotate-1 scale-105 z-10">
-            <div class="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] font-heading text-xl gap-8">
-                <span>🔥 DAILY BAIT DEMO</span> <span>•</span> <span>PICK A SIDE</span> <span>•</span> <span>WIN STREAKS</span> <span>•</span> <span>DEBATE TO EARN</span> <span>•</span> <span>🔥 DAILY BAIT DEMO</span>
-            </div>
-        </div>
-        <style>@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }</style>
-
-        <div class="container mx-auto px-4 mt-12 text-center">
-            <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">TRY THE <span class="text-bait-red">DEMO</span></h2>
-            <p class="text-gray-400 mb-12 max-w-2xl mx-auto font-bold">
-                Experience the core mechanic. One question. Two sides. What's your take?
-            </p>
-
-            <div class="max-w-md mx-auto bg-white text-black rounded-3xl p-6 border-4 border-black shadow-[10px_10px_0px_#FF0033] relative transform hover:scale-[1.02] transition">
-                <div class="flex justify-between items-center mb-6 border-b-2 border-gray-200 pb-2">
-                    <span class="font-heading text-2xl text-bait-red">DAILY BAIT #42</span>
-                    <span class="bg-black text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 12:45 LEFT</span>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="font-black text-3xl leading-tight mb-2">"Is pineapple on pizza a crime?"</h3>
-                    <p class="text-gray-500 text-sm font-bold bg-gray-100 inline-block px-2 py-1 rounded">RULE: 5 Words Max.</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <button onclick="vote('yes')" class="bg-green-500 border-2 border-black rounded-xl py-4 font-heading text-2xl hover:bg-green-400 transition shadow-[4px_4px_0px_black] active:translate-y-1 active:shadow-none text-white">
-                        YES
-                    </button>
-                    <button onclick="vote('no')" class="bg-red-500 border-2 border-black rounded-xl py-4 font-heading text-2xl hover:bg-red-400 transition shadow-[4px_4px_0px_black] active:translate-y-1 active:shadow-none text-white">
-                        NO
-                    </button>
-                </div>
-
-                <div class="vote-bar-container">
-                    <div id="vote-fill" class="vote-fill-red flex items-center justify-end pr-2">
-                        <span class="text-white font-bold text-xs" id="vote-percent-text">50%</span>
-                    </div>
-                    </div>
-                
-                <p id="vote-msg" class="text-center mt-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Cast your vote to see results</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="narrative" class="py-24 relative">
-        <div class="container mx-auto px-4">
-            <div class="glass-card p-8 md:p-12 border-l-8 border-bait-gold bg-gradient-to-r from-black to-transparent" data-aos="fade-right">
-                <h2 class="font-heading text-4xl md:text-6xl mb-6 text-white">THE <span class="text-bait-red">NARRATIVE</span></h2>
-                <div class="space-y-6 text-lg md:text-xl font-bold text-gray-300">
-                    <p>"Strong narrative. Growing community. Momentum building quietly."</p>
-                    <p class="text-white">
-                        Those who understand timing know this: <br>
-                        <span class="text-bait-gold text-2xl">Before the run comes the silence... then the explosion.</span>
-                    </p>
-                    <p>Eyes on $BAIT.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="roadmap" class="py-24 bg-bait-card relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none">
-            <img src="bait-roadmap.png" class="w-full h-full object-cover">
+      <div class="max-w-md mx-auto glass-card p-6 border-4 border-black shadow-[10px_10px_0px_#FF0033] relative">
+        <div class="flex justify-between items-center mb-5 border-b-2 border-white/10 pb-3">
+          <span class="font-heading text-2xl text-bait-gold" id="demo-title">Today's Hot Take</span>
+          <span class="bg-black/70 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+            <i data-lucide="clock" class="w-3 h-3"></i> <span id="demo-timer">Ends in 08:38:18</span>
+          </span>
         </div>
 
-        <div class="container mx-auto px-4 relative z-10">
-            <h2 class="font-heading text-5xl md:text-7xl text-center mb-16 text-white drop-shadow-md">THE <span class="text-bait-gold">HOOKUP</span></h2>
+        <div class="mb-4 text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-bold text-gray-200 mb-3">
+            📝 Explain in exactly <span class="text-bait-gold">5</span> words
+          </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="0">
-                    <div class="absolute -right-4 -top-4 bg-bait-gold w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">1</div>
-                    <div class="mb-4">
-                        <i data-lucide="anchor" class="w-12 h-12 text-bait-red"></i>
-                    </div>
-                    <h3 class="font-heading text-3xl text-white mb-2">The Hook</h3>
-                    <p class="text-xs font-bold text-bait-gold uppercase mb-4">Laying the Foundation</p>
-                    <ul class="text-sm text-gray-400 space-y-2 font-bold">
-                        <li>• Project launch & branding</li>
-                        <li>• Telegram & X Live</li>
-                        <li>• Mascot Reveal</li>
-                        <li>• Initial Liquidity</li>
-                    </ul>
-                </div>
+          <h3 class="font-black text-2xl leading-tight mb-4 text-white" id="demo-question">
+            🔥 HOT TAKE: Pineapple on pizza is...
+          </h3>
 
-                <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="100">
-                    <div class="absolute -right-4 -top-4 bg-bait-orange w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">2</div>
-                    <div class="mb-4">
-                        <i data-lucide="zap" class="w-12 h-12 text-bait-gold"></i>
-                    </div>
-                    <h3 class="font-heading text-3xl text-white mb-2">The Bite</h3>
-                    <p class="text-xs font-bold text-bait-gold uppercase mb-4">Attention Pours In</p>
-                    <ul class="text-sm text-gray-400 space-y-2 font-bold">
-                        <li>• Strategic Marketing</li>
-                        <li>• Influencer Partnerships</li>
-                        <li>• Meme Campaigns</li>
-                        <li>• Chart Visibility</li>
-                    </ul>
-                </div>
+          <div id="demo-options" class="space-y-3 mb-4"></div>
 
-                <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute -right-4 -top-4 bg-bait-red w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-white border-4 border-black z-10">3</div>
-                    <div class="mb-4">
-                        <i data-lucide="waves" class="w-12 h-12 text-bait-orange"></i>
-                    </div>
-                    <h3 class="font-heading text-3xl text-white mb-2">The Reel-In</h3>
-                    <p class="text-xs font-bold text-bait-gold uppercase mb-4">Momentum & Conviction</p>
-                    <ul class="text-sm text-gray-400 space-y-2 font-bold">
-                        <li>• Holder Consolidation</li>
-                        <li>• Utility Tease</li>
-                        <li>• Listings</li>
-                        <li>• Brand Storytelling</li>
-                    </ul>
-                </div>
+          <input id="demo-name"
+                 class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white font-bold outline-none focus:border-bait-gold"
+                 placeholder="Your display name" maxlength="18" />
 
-                <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="300">
-                    <div class="absolute -right-4 -top-4 bg-white w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">4</div>
-                    <div class="mb-4">
-                        <i data-lucide="trophy" class="w-12 h-12 text-bait-gold"></i>
-                    </div>
-                    <h3 class="font-heading text-3xl text-white mb-2">The Catch</h3>
-                    <p class="text-xs font-bold text-bait-gold uppercase mb-4">Legacy Mode</p>
-                    <ul class="text-sm text-gray-400 space-y-2 font-bold">
-                        <li>• Ecosystem Expansion</li>
-                        <li>• Sustainable Growth</li>
-                        <li>• Major Milestones</li>
-                        <li>• $BAIT Recognized</li>
-                    </ul>
-                </div>
-            </div>
+          <input id="demo-reason"
+                 class="mt-3 w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white font-bold outline-none focus:border-bait-gold"
+                 placeholder="(Optional) Why? Exactly 5 words" />
+
+          <p id="demo-error" class="mt-2 text-xs font-bold text-bait-red hidden"></p>
+
+          <button id="demo-submit" class="mt-4 w-full btn-fire flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-5 h-5"></i> Take The Bait
+          </button>
         </div>
-    </section>
 
-    <section class="py-20 text-center">
-        <div class="container mx-auto px-4">
-            <div class="glass-card max-w-3xl mx-auto p-8 border-bait-gold">
-                <h3 class="font-heading text-3xl text-white mb-4">CONTRACT ADDRESS</h3>
-                <div onclick="copyCA()" class="bg-black border-2 border-white/20 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 cursor-pointer hover:border-bait-gold transition group">
-                    <code id="ca-text" class="font-mono text-bait-red break-all md:text-lg">7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon</code>
-                    <div class="flex items-center gap-2 bg-bait-gold text-black px-4 py-2 rounded font-bold uppercase text-xs hover:bg-white transition">
-                        <i data-lucide="copy" class="w-4 h-4"></i> Copy
-                    </div>
-                </div>
-            </div>
+        <div id="demo-results" class="hidden mt-6 text-left">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3" id="demo-result-msg">
+            Results
+          </p>
+
+          <div id="demo-bars" class="space-y-3"></div>
+
+          <div class="mt-6">
+            <h4 class="font-heading text-2xl text-white mb-3">Top reasons</h4>
+            <div id="demo-reasons" class="space-y-3"></div>
+          </div>
         </div>
-    </section>
 
-    <footer class="bg-black border-t-4 border-bait-red pt-16 pb-8 text-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('bait-telegram.png')] opacity-10 bg-cover bg-center pointer-events-none"></div>
-        
-        <div class="container mx-auto px-4 relative z-10">
-            <h2 class="font-heading text-6xl text-white mb-8">$BAIT</h2>
-            
-            <div class="flex justify-center gap-6 mb-12">
-                <a href="https://x.com/bait_coin?s=21" class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FF0033]">
-                    <i data-lucide="twitter" class="w-8 h-8"></i>
-                </a>
-                <a href="https://t.me/+JDZzlWPoMwA0MWEx" class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_white]">
-                    <i data-lucide="send" class="w-8 h-8"></i>
-                </a>
-                <a href="https://t.co/DHSEFsQfC1" class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FFD700]">
-                    <i data-lucide="message-square" class="w-8 h-8"></i>
-                </a>
-            </div>
+      </div>
+    </div>
+  </section>
 
-            <p class="font-bold text-gray-500 text-sm">© 2026 $BAIT. You're early – and that matters.</p>
+  <!-- NARRATIVE -->
+  <section id="narrative" class="py-24 relative">
+    <div class="container mx-auto px-4">
+      <div class="glass-card p-8 md:p-12 border-l-8 border-bait-gold bg-gradient-to-r from-black to-transparent" data-aos="fade-right">
+        <h2 class="font-heading text-4xl md:text-6xl mb-6 text-white">THE <span class="text-bait-red">NARRATIVE</span></h2>
+        <div class="space-y-6 text-lg md:text-xl font-bold text-gray-300">
+          <p>"Strong narrative. Growing community. Momentum building quietly."</p>
+          <p class="text-white">
+            Those who understand timing know this: <br>
+            <span class="text-bait-gold text-2xl">Before the run comes the silence... then the explosion.</span>
+          </p>
+          <p>Eyes on $BAIT.</p>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        // Init Animation
-        AOS.init({ duration: 1000, once: true });
-        lucide.createIcons();
+  <!-- ROADMAP -->
+  <section id="roadmap" class="py-24 bg-bait-card relative overflow-hidden">
+    <div class="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none">
+      <img src="bait-roadmap.png" class="w-full h-full object-cover" alt="">
+    </div>
 
-        // Ember Effect
-        const emberContainer = document.getElementById('ember-container');
-        function createEmber() {
-            const ember = document.createElement('div');
-            ember.classList.add('ember');
-            ember.style.left = Math.random() * 100 + 'vw';
-            ember.style.animationDuration = Math.random() * 3 + 2 + 's';
-            ember.style.opacity = Math.random();
-            emberContainer.appendChild(ember);
-            setTimeout(() => ember.remove(), 5000);
-        }
-        setInterval(createEmber, 100);
+    <div class="container mx-auto px-4 relative z-10">
+      <h2 class="font-heading text-5xl md:text-7xl text-center mb-16 text-white drop-shadow-md">THE <span class="text-bait-gold">HOOKUP</span></h2>
 
-        // Copy CA
-        function copyCA() {
-            const ca = document.getElementById('ca-text').innerText;
-            navigator.clipboard.writeText(ca).then(() => alert('CA Copied! Now go take the bait. 🎣'));
-        }
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="0">
+          <div class="absolute -right-4 -top-4 bg-bait-gold w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">1</div>
+          <div class="mb-4">
+            <i data-lucide="anchor" class="w-12 h-12 text-bait-red"></i>
+          </div>
+          <h3 class="font-heading text-3xl text-white mb-2">The Hook</h3>
+          <p class="text-xs font-bold text-bait-gold uppercase mb-4">Laying the Foundation</p>
+          <ul class="text-sm text-gray-400 space-y-2 font-bold">
+            <li>• Project launch & branding</li>
+            <li>• Telegram & X Live</li>
+            <li>• Mascot Reveal</li>
+            <li>• Initial Liquidity</li>
+          </ul>
+        </div>
 
-        // Mock Voting Logic
-        function vote(side) {
-            const bar = document.getElementById('vote-fill');
-            const msg = document.getElementById('vote-msg');
-            const percentText = document.getElementById('vote-percent-text');
-            
-            // Randomize result slightly to make it feel alive
-            const percentage = Math.floor(Math.random() * (80 - 40 + 1) + 40); 
-            
-            bar.style.width = `${percentage}%`;
-            percentText.innerText = `${percentage}%`;
+        <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="100">
+          <div class="absolute -right-4 -top-4 bg-bait-orange w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">2</div>
+          <div class="mb-4">
+            <i data-lucide="zap" class="w-12 h-12 text-bait-gold"></i>
+          </div>
+          <h3 class="font-heading text-3xl text-white mb-2">The Bite</h3>
+          <p class="text-xs font-bold text-bait-gold uppercase mb-4">Attention Pours In</p>
+          <ul class="text-sm text-gray-400 space-y-2 font-bold">
+            <li>• Strategic Marketing</li>
+            <li>• Influencer Partnerships</li>
+            <li>• Meme Campaigns</li>
+            <li>• Chart Visibility</li>
+          </ul>
+        </div>
 
-            if (side === 'yes') {
-                bar.classList.remove('bg-red-500');
-                bar.classList.add('bg-green-500');
-                msg.innerText = "You voted YES. The community is split! ";
-                msg.className = "text-center mt-4 text-xs font-bold text-green-400 uppercase tracking-widest";
-            } else {
-                bar.classList.remove('bg-green-500');
-                bar.classList.add('bg-red-500');
-                // For 'NO', we might want to show the complement percentage or stick to the bar's value logic
-                // Here, let's assume the bar represents the 'YES' vote share, so 'NO' votes reduce it visually or we invert logic.
-                // For simplicity in this demo, let's just change color and text.
-                msg.innerText = `You voted NO. Debate heating up!`;
-                msg.className = "text-center mt-4 text-xs font-bold text-red-400 uppercase tracking-widest";
-            }
-        }
+        <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="200">
+          <div class="absolute -right-4 -top-4 bg-bait-red w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-white border-4 border-black z-10">3</div>
+          <div class="mb-4">
+            <i data-lucide="waves" class="w-12 h-12 text-bait-orange"></i>
+          </div>
+          <h3 class="font-heading text-3xl text-white mb-2">The Reel-In</h3>
+          <p class="text-xs font-bold text-bait-gold uppercase mb-4">Momentum & Conviction</p>
+          <ul class="text-sm text-gray-400 space-y-2 font-bold">
+            <li>• Holder Consolidation</li>
+            <li>• Utility Tease</li>
+            <li>• Listings</li>
+            <li>• Brand Storytelling</li>
+          </ul>
+        </div>
 
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
+        <div class="glass-card p-6 relative overflow-hidden group hover:bg-bait-dark/50" data-aos="fade-up" data-aos-delay="300">
+          <div class="absolute -right-4 -top-4 bg-white w-16 h-16 rounded-full flex items-center justify-center font-heading text-3xl text-black border-4 border-black z-10">4</div>
+          <div class="mb-4">
+            <i data-lucide="trophy" class="w-12 h-12 text-bait-gold"></i>
+          </div>
+          <h3 class="font-heading text-3xl text-white mb-2">The Catch</h3>
+          <p class="text-xs font-bold text-bait-gold uppercase mb-4">Legacy Mode</p>
+          <ul class="text-sm text-gray-400 space-y-2 font-bold">
+            <li>• Ecosystem Expansion</li>
+            <li>• Sustainable Growth</li>
+            <li>• Major Milestones</li>
+            <li>• $BAIT Recognized</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+  <!-- CONTRACT -->
+  <section class="py-20 text-center">
+    <div class="container mx-auto px-4">
+      <div class="glass-card max-w-3xl mx-auto p-8 border-bait-gold">
+        <h3 class="font-heading text-3xl text-white mb-4">CONTRACT ADDRESS</h3>
+        <div onclick="copyCA()"
+             class="bg-black border-2 border-white/20 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 cursor-pointer hover:border-bait-gold transition group">
+          <code id="ca-text" class="font-mono text-bait-red break-all md:text-lg">7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon</code>
+          <div class="flex items-center gap-2 bg-bait-gold text-black px-4 py-2 rounded font-bold uppercase text-xs hover:bg-white transition">
+            <i data-lucide="copy" class="w-4 h-4"></i> Copy
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    </script>
+  <!-- FOOTER -->
+  <footer class="bg-black border-t-4 border-bait-red pt-16 pb-8 text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-[url('bait-telegram.png')] opacity-10 bg-cover bg-center pointer-events-none"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <h2 class="font-heading text-6xl text-white mb-8">$BAIT</h2>
+
+      <div class="flex justify-center gap-6 mb-12">
+        <a href="https://x.com/bait_coin?s=21"
+           class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FF0033]">
+          <i data-lucide="twitter" class="w-8 h-8"></i>
+        </a>
+        <a href="https://t.me/+JDZzlWPoMwA0MWEx"
+           class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_white]">
+          <i data-lucide="send" class="w-8 h-8"></i>
+        </a>
+        <a href="https://t.co/DHSEFsQfC1"
+           class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FFD700]">
+          <i data-lucide="message-square" class="w-8 h-8"></i>
+        </a>
+      </div>
+
+      <p class="font-bold text-gray-500 text-sm">© 2026 $BAIT. You're early – and that matters.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Init Animation
+    AOS.init({ duration: 1000, once: true });
+    lucide.createIcons();
+
+    // Ember Effect
+    const emberContainer = document.getElementById('ember-container');
+    function createEmber() {
+      const ember = document.createElement('div');
+      ember.classList.add('ember');
+      ember.style.left = Math.random() * 100 + 'vw';
+      ember.style.animationDuration = Math.random() * 3 + 2 + 's';
+      ember.style.opacity = Math.random();
+      emberContainer.appendChild(ember);
+      setTimeout(() => ember.remove(), 5000);
+    }
+    setInterval(createEmber, 100);
+
+    // Copy CA
+    function copyCA() {
+      const ca = document.getElementById('ca-text').innerText;
+      navigator.clipboard.writeText(ca).then(() => alert('CA Copied! Now go take the bait. 🎣'));
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+    document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+    // ----------------------------
+    // BAIT DEMO GAME LOGIC
+    // ----------------------------
+    const DEMO = {
+      question: '🔥 HOT TAKE: Pineapple on pizza is...',
+      ruleWords: 5,
+      options: [
+        { id: "crime", label: "A crime against humanity 🚫" },
+        { id: "delicious", label: "Actually delicious 🍕" },
+        { id: "depends", label: "Depends on the mood 🤷" },
+      ],
+      votes: { crime: 31, delicious: 44, depends: 25 },
+      reasons: [
+        { id: 1, name: "Mia", option: "crime", text: "Fruit does not belong there", agree: 12, disagree: 4 },
+        { id: 2, name: "Jay", option: "delicious", text: "Sweet and salty is elite", agree: 22, disagree: 5 },
+        { id: 3, name: "Z", option: "depends", text: "Only if it’s crispy", agree: 9, disagree: 2 },
+        { id: 4, name: "Kai", option: "crime", text: "Pizza deserves basic respect", agree: 14, disagree: 6 },
+      ],
+      selectedOption: null,
+      submitted: false,
+    };
+
+    const elOptions = document.getElementById("demo-options");
+    const elName = document.getElementById("demo-name");
+    const elReason = document.getElementById("demo-reason");
+    const elError = document.getElementById("demo-error");
+    const elSubmit = document.getElementById("demo-submit");
+    const elResults = document.getElementById("demo-results");
+    const elBars = document.getElementById("demo-bars");
+    const elReasons = document.getElementById("demo-reasons");
+    const elQuestion = document.getElementById("demo-question");
+
+    elQuestion.textContent = DEMO.question;
+
+    function setError(msg) {
+      if (!msg) {
+        elError.classList.add("hidden");
+        elError.textContent = "";
+        return;
+      }
+      elError.classList.remove("hidden");
+      elError.textContent = msg;
+    }
+
+    function wordCount(s) {
+      const trimmed = (s || "").trim();
+      if (!trimmed) return 0;
+      return trimmed.split(/\s+/).length;
+    }
+
+    function renderOptions() {
+      elOptions.innerHTML = "";
+      DEMO.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className =
+          "w-full text-left bg-black/30 border border-white/10 rounded-xl px-4 py-4 font-bold text-white hover:border-bait-gold transition flex items-center justify-between";
+        btn.innerHTML = `<span>${opt.label}</span><span class="text-xs text-gray-400">Select</span>`;
+
+        btn.addEventListener("click", () => {
+          DEMO.selectedOption = opt.id;
+          [...elOptions.children].forEach(child => child.classList.remove("ring-2", "ring-bait-gold"));
+          btn.classList.add("ring-2", "ring-bait-gold");
+          setError("");
+        });
+
+        elOptions.appendChild(btn);
+      });
+    }
+
+    function totalVotes() {
+      return Object.values(DEMO.votes).reduce((a, b) => a + b, 0);
+    }
+
+    function renderBars() {
+      elBars.innerHTML = "";
+      const total = totalVotes();
+
+      DEMO.options.forEach(opt => {
+        const v = DEMO.votes[opt.id] || 0;
+        const pct = total === 0 ? 0 : Math.round((v / total) * 100);
+
+        const row = document.createElement("div");
+        row.className = "space-y-2";
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-white">${opt.label}</span>
+            <span class="text-sm font-bold text-bait-gold">${pct}%</span>
+          </div>
+          <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/10">
+            <div class="h-full bg-gradient-to-r from-bait-red to-bait-orange" style="width:${pct}%"></div>
+          </div>
+        `;
+        elBars.appendChild(row);
+      });
+    }
+
+    function renderReasons() {
+      elReasons.innerHTML = "";
+      const sorted = [...DEMO.reasons].sort((a, b) => (b.agree - b.disagree) - (a.agree - a.disagree));
+
+      sorted.slice(0, 6).forEach(r => {
+        const card = document.createElement("div");
+        card.className = "bg-black/30 border border-white/10 rounded-xl p-4";
+
+        const optLabel = DEMO.options.find(o => o.id === r.option)?.label || "Answer";
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs text-gray-400 font-bold mb-1">${r.name} • <span class="text-bait-gold">${optLabel}</span></p>
+              <p class="text-white font-bold">${r.text}</p>
+            </div>
+            <div class="flex gap-2">
+              <button data-action="agree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-gold transition">
+                👍 <span>${r.agree}</span>
+              </button>
+              <button data-action="disagree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-red transition">
+                👎 <span>${r.disagree}</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector('[data-action="agree"]').addEventListener("click", () => {
+          r.agree += 1;
+          renderReasons();
+        });
+        card.querySelector('[data-action="disagree"]').addEventListener("click", () => {
+          r.disagree += 1;
+          renderReasons();
+        });
+
+        elReasons.appendChild(card);
+      });
+    }
+
+    function submitVote() {
+      if (DEMO.submitted) return;
+
+      const name = (elName.value || "").trim();
+      const reason = (elReason.value || "").trim();
+
+      if (!DEMO.selectedOption) {
+        setError("Pick an answer first.");
+        return;
+      }
+      if (!name) {
+        setError("Add a display name.");
+        return;
+      }
+      if (reason && wordCount(reason) !== DEMO.ruleWords) {
+        setError(`Your reason must be exactly ${DEMO.ruleWords} words.`);
+        return;
+      }
+
+      setError("");
+      DEMO.votes[DEMO.selectedOption] = (DEMO.votes[DEMO.selectedOption] || 0) + 1;
+
+      if (reason) {
+        DEMO.reasons.unshift({
+          id: Date.now(),
+          name,
+          option: DEMO.selectedOption,
+          text: reason,
+          agree: 0,
+          disagree: 0,
+        });
+      }
+
+      DEMO.submitted = true;
+      document.getElementById("demo-results").classList.remove("hidden");
+      document.getElementById("demo-result-msg").textContent = "✅ Vote submitted. Here’s what everyone thinks…";
+
+      renderBars();
+      renderReasons();
+
+      elSubmit.disabled = true;
+      elSubmit.classList.add("opacity-60", "cursor-not-allowed");
+      elName.disabled = true;
+      elReason.disabled = true;
+    }
+
+    elSubmit.addEventListener("click", submitVote);
+    renderOptions();
+  </script>
 </body>
 </html>
