@@ -122,6 +122,17 @@
     .btn-fire:hover {
       filter: brightness(1.1);
     }
+
+    /* marquee */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 20s linear infinite;
+    }
   </style>
 </head>
 
@@ -145,21 +156,21 @@
 
       <div class="flex items-center gap-4">
         <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e"
-           target="_blank"
+           target="_blank" rel="noopener noreferrer"
            class="btn-fire text-lg px-4 py-2 md:px-6 md:py-2">
           BUY NOW
         </a>
-        <button id="mobile-menu-btn" class="md:hidden text-white hover:text-bait-gold focus:outline-none">
+        <button id="mobile-menu-btn" class="md:hidden text-white hover:text-bait-gold focus:outline-none" aria-label="Open menu">
           <i data-lucide="menu" class="w-8 h-8"></i>
         </button>
       </div>
     </div>
 
     <div id="mobile-menu" class="hidden md:hidden bg-bait-card border-t border-bait-red/20 absolute top-full left-0 w-full p-6 flex flex-col gap-4 text-center shadow-xl">
-      <a href="#concept" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">The Concept</a>
-      <a href="#demo" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">App Demo</a>
-      <a href="#narrative" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Narrative</a>
-      <a href="#roadmap" class="font-heading text-2xl text-white hover:text-bait-gold" onclick="toggleMobileMenu()">Roadmap</a>
+      <a href="#concept" class="font-heading text-2xl text-white hover:text-bait-gold" data-close-menu>The Concept</a>
+      <a href="#demo" class="font-heading text-2xl text-white hover:text-bait-gold" data-close-menu>App Demo</a>
+      <a href="#narrative" class="font-heading text-2xl text-white hover:text-bait-gold" data-close-menu>Narrative</a>
+      <a href="#roadmap" class="font-heading text-2xl text-white hover:text-bait-gold" data-close-menu>Roadmap</a>
     </div>
   </nav>
 
@@ -178,7 +189,7 @@
 
         <h1 class="font-heading text-6xl md:text-8xl lg:text-9xl leading-[0.9] mb-6 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
           <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">$BAIT</span> <br>
-          IS LOADING...
+          <span class="text-bait-gold text-outline">EARLY ACCESS</span>
         </h1>
 
         <p class="text-gray-300 text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0 font-bold leading-relaxed border-l-4 border-bait-gold pl-4">
@@ -187,11 +198,11 @@
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a href="https://t.me/+JDZzlWPoMwA0MWEx" target="_blank" class="btn-fire">
+          <a href="https://t.me/+JDZzlWPoMwA0MWEx" target="_blank" rel="noopener noreferrer" class="btn-fire">
             JOIN TELEGRAM
           </a>
           <a href="https://moonshot.com/7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon?ref=Atow2e"
-             target="_blank"
+             target="_blank" rel="noopener noreferrer"
              class="glass-card px-8 py-3 flex items-center justify-center gap-2 font-heading text-xl hover:bg-white/10 cursor-pointer text-white border-2 border-transparent hover:border-white transition-all">
             <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Moonshot_Logo.png" class="w-6 h-6 grayscale invert" alt="">
             Moonshot
@@ -253,15 +264,15 @@
     </div>
   </section>
 
-  <!-- DEMO (UPDATED GAME MECHANIC) -->
+  <!-- DEMO -->
   <section id="demo" class="py-20 bg-bait-card border-y-4 border-bait-gold relative overflow-hidden">
-    <div class="absolute top-0 left-0 w-full bg-bait-gold text-black py-2 transform -rotate-1 scale-105 z-10">
-      <div class="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] font-heading text-xl gap-8">
+    <div class="absolute top-0 left-0 w-full bg-bait-gold text-black py-2 transform -rotate-1 scale-105 z-10 overflow-hidden">
+      <div class="marquee font-heading text-xl gap-8">
         <span>🔥 DAILY BAIT DEMO</span> <span>•</span> <span>PICK A SIDE</span> <span>•</span> <span>DROP 5 WORDS</span>
         <span>•</span> <span>AGREE / DISAGREE</span> <span>•</span> <span>🔥 DAILY BAIT DEMO</span>
+        <span>•</span> <span>PICK A SIDE</span> <span>•</span> <span>DROP 5 WORDS</span>
       </div>
     </div>
-    <style>@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }</style>
 
     <div class="container mx-auto px-4 mt-12 text-center">
       <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">TRY THE <span class="text-bait-red">GAME</span></h2>
@@ -273,7 +284,7 @@
         <div class="flex justify-between items-center mb-5 border-b-2 border-white/10 pb-3">
           <span class="font-heading text-2xl text-bait-gold" id="demo-title">Today's Hot Take</span>
           <span class="bg-black/70 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
-            <i data-lucide="clock" class="w-3 h-3"></i> <span id="demo-timer">Ends in 08:38:18</span>
+            <i data-lucide="clock" class="w-3 h-3"></i> <span id="demo-timer">Ends in --:--:--</span>
           </span>
         </div>
 
@@ -415,13 +426,18 @@
     <div class="container mx-auto px-4">
       <div class="glass-card max-w-3xl mx-auto p-8 border-bait-gold">
         <h3 class="font-heading text-3xl text-white mb-4">CONTRACT ADDRESS</h3>
-        <div onclick="copyCA()"
+
+        <div id="ca-box"
              class="bg-black border-2 border-white/20 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 cursor-pointer hover:border-bait-gold transition group">
           <code id="ca-text" class="font-mono text-bait-red break-all md:text-lg">7MAERd8XhSdJUrUN63FsCSaVHpM3VntV6Rxohsdimoon</code>
+
           <div class="flex items-center gap-2 bg-bait-gold text-black px-4 py-2 rounded font-bold uppercase text-xs hover:bg-white transition">
-            <i data-lucide="copy" class="w-4 h-4"></i> Copy
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span id="ca-copy-label">Copy</span>
           </div>
         </div>
+
+        <p id="ca-status" class="mt-3 text-xs font-bold text-gray-400"></p>
       </div>
     </div>
   </section>
@@ -434,15 +450,15 @@
       <h2 class="font-heading text-6xl text-white mb-8">$BAIT</h2>
 
       <div class="flex justify-center gap-6 mb-12">
-        <a href="https://x.com/bait_coin?s=21"
+        <a href="https://x.com/bait_coin?s=21" target="_blank" rel="noopener noreferrer"
            class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FF0033]">
           <i data-lucide="twitter" class="w-8 h-8"></i>
         </a>
-        <a href="https://t.me/+JDZzlWPoMwA0MWEx"
+        <a href="https://t.me/+JDZzlWPoMwA0MWEx" target="_blank" rel="noopener noreferrer"
            class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_white]">
           <i data-lucide="send" class="w-8 h-8"></i>
         </a>
-        <a href="https://t.co/DHSEFsQfC1"
+        <a href="https://discord.gg/tRd7UhctS" target="_blank" rel="noopener noreferrer"
            class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:scale-110 transition border-4 border-black shadow-[4px_4px_0px_#FFD700]">
           <i data-lucide="message-square" class="w-8 h-8"></i>
         </a>
@@ -470,18 +486,102 @@
     }
     setInterval(createEmber, 100);
 
-    // Copy CA
-    function copyCA() {
-      const ca = document.getElementById('ca-text').innerText;
-      navigator.clipboard.writeText(ca).then(() => alert('CA Copied! Now go take the bait. 🎣'));
+    // ----------------------------
+    // Mobile Menu (better behavior)
+    // ----------------------------
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function toggleMobileMenu() {
+      mobileMenu.classList.toggle('hidden');
+    }
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+
+    document.querySelectorAll('[data-close-menu]').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // close on click outside
+    document.addEventListener('click', (e) => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      if (!isOpen) return;
+      const clickedInside = mobileMenu.contains(e.target) || mobileMenuBtn.contains(e.target);
+      if (!clickedInside) mobileMenu.classList.add('hidden');
+    });
+
+    // ----------------------------
+    // Copy CA (robust + no alert)
+    // ----------------------------
+    const caBox = document.getElementById('ca-box');
+    const caTextEl = document.getElementById('ca-text');
+    const caStatus = document.getElementById('ca-status');
+    const caCopyLabel = document.getElementById('ca-copy-label');
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (e) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch (err) {
+          return false;
+        }
+      }
     }
 
-    // Mobile Menu Toggle
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
+    caBox.addEventListener('click', async () => {
+      const ca = (caTextEl.innerText || '').trim();
+      const ok = await copyText(ca);
+      if (ok) {
+        caStatus.textContent = "Copied ✅ Now go take the bait. 🎣";
+        caCopyLabel.textContent = "Copied";
+        setTimeout(() => {
+          caStatus.textContent = "";
+          caCopyLabel.textContent = "Copy";
+        }, 1400);
+      } else {
+        caStatus.textContent = "Couldn’t copy on this browser — tap & hold to copy.";
+        setTimeout(() => (caStatus.textContent = ""), 2200);
+      }
+    });
+
+    // ----------------------------
+    // DEMO TIMER (counts to midnight)
+    // ----------------------------
+    const demoTimerEl = document.getElementById("demo-timer");
+    function msToHMS(ms){
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = String(Math.floor(total / 3600)).padStart(2,'0');
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2,'0');
+      const s = String(total % 60).padStart(2,'0');
+      return `${h}:${m}:${s}`;
     }
-    document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+    function nextMidnight(){
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24,0,0,0);
+      return next;
+    }
+    function tickTimer(){
+      const now = new Date();
+      const end = nextMidnight();
+      demoTimerEl.textContent = `Ends in ${msToHMS(end - now)}`;
+    }
+    tickTimer();
+    setInterval(tickTimer, 1000);
 
     // ----------------------------
     // BAIT DEMO GAME LOGIC
@@ -510,7 +610,6 @@
     const elReason = document.getElementById("demo-reason");
     const elError = document.getElementById("demo-error");
     const elSubmit = document.getElementById("demo-submit");
-    const elResults = document.getElementById("demo-results");
     const elBars = document.getElementById("demo-bars");
     const elReasons = document.getElementById("demo-reasons");
     const elQuestion = document.getElementById("demo-question");
@@ -550,6 +649,9 @@
 
         elOptions.appendChild(btn);
       });
+
+      // ensure lucide icons render after dynamic content
+      lucide.createIcons();
     }
 
     function totalVotes() {
