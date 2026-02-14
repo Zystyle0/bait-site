@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$BAIT | The Viral Debate Protocol</title>
 
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -467,7 +473,7 @@
       <p class="font-bold text-gray-500 text-sm">© 2026 $BAIT. You're early – and that matters.</p>
     </div>
   </footer>
-a <script src="https://unpkg.com/@supabase/supabase-js@2">
+
   <script>
     // Init Animation
     AOS.init({ duration: 1000, once: true });
@@ -582,9 +588,193 @@ a <script src="https://unpkg.com/@supabase/supabase-js@2">
     }
     tickTimer();
     setInterval(tickTimer, 1000);
-  <script src="https://unpkg.com/@supabase/supabase-js@2">
-  <script src="./bait-live-game.js"></script>
 
+    // ----------------------------
+    // BAIT DEMO GAME LOGIC
+    // ----------------------------
+    const DEMO = {
+      question: '🔥 HOT TAKE: Pineapple on pizza is...',
+      ruleWords: 5,
+      options: [
+        { id: "crime", label: "A crime against humanity 🚫" },
+        { id: "delicious", label: "Actually delicious 🍕" },
+        { id: "depends", label: "Depends on the mood 🤷" },
+      ],
+      votes: { crime: 31, delicious: 44, depends: 25 },
+      reasons: [
+        { id: 1, name: "Mia", option: "crime", text: "Fruit does not belong there", agree: 12, disagree: 4 },
+        { id: 2, name: "Jay", option: "delicious", text: "Sweet and salty is elite", agree: 22, disagree: 5 },
+        { id: 3, name: "Z", option: "depends", text: "Only if it’s crispy", agree: 9, disagree: 2 },
+        { id: 4, name: "Kai", option: "crime", text: "Pizza deserves basic respect", agree: 14, disagree: 6 },
+      ],
+      selectedOption: null,
+      submitted: false,
+    };
+
+    const elOptions = document.getElementById("demo-options");
+    const elName = document.getElementById("demo-name");
+    const elReason = document.getElementById("demo-reason");
+    const elError = document.getElementById("demo-error");
+    const elSubmit = document.getElementById("demo-submit");
+    const elBars = document.getElementById("demo-bars");
+    const elReasons = document.getElementById("demo-reasons");
+    const elQuestion = document.getElementById("demo-question");
+
+    elQuestion.textContent = DEMO.question;
+
+    function setError(msg) {
+      if (!msg) {
+        elError.classList.add("hidden");
+        elError.textContent = "";
+        return;
+      }
+      elError.classList.remove("hidden");
+      elError.textContent = msg;
+    }
+
+    function wordCount(s) {
+      const trimmed = (s || "").trim();
+      if (!trimmed) return 0;
+      return trimmed.split(/\s+/).length;
+    }
+
+    function renderOptions() {
+      elOptions.innerHTML = "";
+      DEMO.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className =
+          "w-full text-left bg-black/30 border border-white/10 rounded-xl px-4 py-4 font-bold text-white hover:border-bait-gold transition flex items-center justify-between";
+        btn.innerHTML = `<span>${opt.label}</span><span class="text-xs text-gray-400">Select</span>`;
+
+        btn.addEventListener("click", () => {
+          DEMO.selectedOption = opt.id;
+          [...elOptions.children].forEach(child => child.classList.remove("ring-2", "ring-bait-gold"));
+          btn.classList.add("ring-2", "ring-bait-gold");
+          setError("");
+        });
+
+        elOptions.appendChild(btn);
+      });
+
+      // ensure lucide icons render after dynamic content
+      lucide.createIcons();
+    }
+
+    function totalVotes() {
+      return Object.values(DEMO.votes).reduce((a, b) => a + b, 0);
+    }
+
+    function renderBars() {
+      elBars.innerHTML = "";
+      const total = totalVotes();
+
+      DEMO.options.forEach(opt => {
+        const v = DEMO.votes[opt.id] || 0;
+        const pct = total === 0 ? 0 : Math.round((v / total) * 100);
+
+        const row = document.createElement("div");
+        row.className = "space-y-2";
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-white">${opt.label}</span>
+            <span class="text-sm font-bold text-bait-gold">${pct}%</span>
+          </div>
+          <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/10">
+            <div class="h-full bg-gradient-to-r from-bait-red to-bait-orange" style="width:${pct}%"></div>
+          </div>
+        `;
+        elBars.appendChild(row);
+      });
+    }
+
+    function renderReasons() {
+      elReasons.innerHTML = "";
+      const sorted = [...DEMO.reasons].sort((a, b) => (b.agree - b.disagree) - (a.agree - a.disagree));
+
+      sorted.slice(0, 6).forEach(r => {
+        const card = document.createElement("div");
+        card.className = "bg-black/30 border border-white/10 rounded-xl p-4";
+
+        const optLabel = DEMO.options.find(o => o.id === r.option)?.label || "Answer";
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs text-gray-400 font-bold mb-1">${r.name} • <span class="text-bait-gold">${optLabel}</span></p>
+              <p class="text-white font-bold">${r.text}</p>
+            </div>
+            <div class="flex gap-2">
+              <button data-action="agree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-gold transition">
+                👍 <span>${r.agree}</span>
+              </button>
+              <button data-action="disagree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-red transition">
+                👎 <span>${r.disagree}</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector('[data-action="agree"]').addEventListener("click", () => {
+          r.agree += 1;
+          renderReasons();
+        });
+        card.querySelector('[data-action="disagree"]').addEventListener("click", () => {
+          r.disagree += 1;
+          renderReasons();
+        });
+
+        elReasons.appendChild(card);
+      });
+    }
+
+    function submitVote() {
+      if (DEMO.submitted) return;
+
+      const name = (elName.value || "").trim();
+      const reason = (elReason.value || "").trim();
+
+      if (!DEMO.selectedOption) {
+        setError("Pick an answer first.");
+        return;
+      }
+      if (!name) {
+        setError("Add a display name.");
+        return;
+      }
+      if (reason && wordCount(reason) !== DEMO.ruleWords) {
+        setError(`Your reason must be exactly ${DEMO.ruleWords} words.`);
+        return;
+      }
+
+      setError("");
+      DEMO.votes[DEMO.selectedOption] = (DEMO.votes[DEMO.selectedOption] || 0) + 1;
+
+      if (reason) {
+        DEMO.reasons.unshift({
+          id: Date.now(),
+          name,
+          option: DEMO.selectedOption,
+          text: reason,
+          agree: 0,
+          disagree: 0,
+        });
+      }
+
+      DEMO.submitted = true;
+      document.getElementById("demo-results").classList.remove("hidden");
+      document.getElementById("demo-result-msg").textContent = "✅ Vote submitted. Here’s what everyone thinks…";
+
+      renderBars();
+      renderReasons();
+
+      elSubmit.disabled = true;
+      elSubmit.classList.add("opacity-60", "cursor-not-allowed");
+      elName.disabled = true;
+      elReason.disabled = true;
+    }
+
+    elSubmit.addEventListener("click", submitVote);
+    renderOptions();
   </script>
 </body>
 </html>
