@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$BAIT | Live Demo</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Supabase client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Bangers"', 'cursive'],
+            body: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            'bait-red': '#FF0033',
+            'bait-orange': '#FF4D00',
+            'bait-gold': '#FFD700',
+            'bait-dark': '#0f0505',
+            'bait-card': '#1a0a0a',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'wiggle': 'wiggle 2s linear infinite',
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } },
+            wiggle: { '0%, 100%': { transform: 'rotate(-3deg)' }, '50%': { transform: 'rotate(3deg)' } }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color:#0f0505; color:white; overflow-x:hidden; }
+    .glass-card {
+      background: rgba(20, 5, 5, 0.8);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 77, 0, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: #FFD700;
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(255, 77, 0, 0.3);
+    }
+    .text-outline { -webkit-text-stroke: 1px black; text-shadow: 3px 3px 0px #FF0033; }
+    .btn-fire {
+      background: linear-gradient(180deg, #FF4D00, #FF0033);
+      border: 2px solid #FFD700;
+      color: white;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 1.25rem;
+      padding: 12px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 0 #990000;
+      transition: all 0.1s;
+    }
+    .btn-fire:active { transform: translateY(6px); box-shadow: 0 0 0 #990000; }
+    .btn-fire:hover { filter: brightness(1.1); }
+  </style>
+</head>
+
+<body class="font-body selection:bg-bait-red selection:text-white">
+
+  <section id="demo" class="py-20 bg-bait-card border-y-4 border-bait-gold relative overflow-hidden">
+    <div class="container mx-auto px-4 mt-12 text-center">
+      <h2 class="font-heading text-5xl md:text-7xl mb-4 text-white text-outline">TRY THE <span class="text-bait-red">GAME</span></h2>
+      <p class="text-gray-400 mb-12 max-w-2xl mx-auto font-bold">
+        One daily hot take. Pick a side. Optional 5-word reason. Then see what everyone else said.
+      </p>
+
+      <div class="max-w-md mx-auto glass-card p-6 border-4 border-black shadow-[10px_10px_0px_#FF0033] relative">
+        <div class="flex justify-between items-center mb-5 border-b-2 border-white/10 pb-3">
+          <span class="font-heading text-2xl text-bait-gold" id="demo-title">Today's Hot Take</span>
+          <span class="bg-black/70 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+            <i data-lucide="clock" class="w-3 h-3"></i> <span id="demo-timer">Ends in --:--:--</span>
+          </span>
+        </div>
+
+        <div class="mb-4 text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-bold text-gray-200 mb-3">
+            📝 Explain in exactly <span class="text-bait-gold">5</span> words
+          </div>
+
+          <h3 class="font-black text-2xl leading-tight mb-4 text-white" id="demo-question"></h3>
+
+          <div id="demo-options" class="space-y-3 mb-4"></div>
+
+          <input id="demo-name"
+                 class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white font-bold outline-none focus:border-bait-gold"
+                 placeholder="Your display name" maxlength="18" />
+
+          <input id="demo-reason"
+                 class="mt-3 w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white font-bold outline-none focus:border-bait-gold"
+                 placeholder="(Optional) Why? Exactly 5 words" />
+
+          <p id="demo-error" class="mt-2 text-xs font-bold text-bait-red hidden"></p>
+
+          <button id="demo-submit" class="mt-4 w-full btn-fire flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-5 h-5"></i> Take The Bait
+          </button>
+
+          <p id="demo-youvoted" class="mt-3 text-xs font-bold text-gray-300 hidden">
+            ✅ You already voted today. Results update live.
+          </p>
+        </div>
+
+        <div id="demo-results" class="hidden mt-6 text-left">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3" id="demo-result-msg">Results</p>
+          <div id="demo-bars" class="space-y-3"></div>
+
+          <div class="mt-6">
+            <h4 class="font-heading text-2xl text-white mb-3">Top reasons</h4>
+            <div id="demo-reasons" class="space-y-3"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    AOS.init({ duration: 1000, once: true });
+    lucide.createIcons();
+
+    // ----------------------------
+    // SUPABASE CONFIG (EDIT THESE)
+    // ----------------------------
+    const SUPABASE_URL = https://bait-site-53anj4m5w-zystyle0s-projects.vercel.app/;
+    const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYXVzbWZ3cm1rbHJoZmVtZm54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4MjM5MzUsImV4cCI6MjA4NjM5OTkzNX0.WCgRBxoRGN48WcOcbcpvw-GWuoQRQADOwWfNycbjiX0;
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ----------------------------
+    // DEMO CONTENT (you can swap question daily later)
+    // ----------------------------
+    const DEMO = {
+      question: "🔥 HOT TAKE: Pineapple on pizza is...",
+      ruleWords: 5,
+      options: [
+        { id: "crime", label: "A crime against humanity 🚫" },
+        { id: "delicious", label: "Actually delicious 🍕" },
+        { id: "depends", label: "Depends on the mood 🤷" },
+      ],
+      selectedOption: null,
+    };
+
+    // "question_key" controls daily reset + storage
+    // Using local date YYYY-MM-DD (client-side). Good for demo.
+    function questionKeyToday() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+    const QUESTION_KEY = questionKeyToday();
+
+    // localStorage key to remember if YOU voted today
+    const LS_VOTE_KEY = `bait_vote_${QUESTION_KEY}`;
+
+    // ----------------------------
+    // TIMER (to midnight local)
+    // ----------------------------
+    const demoTimerEl = document.getElementById("demo-timer");
+    function msToHMS(ms){
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = String(Math.floor(total / 3600)).padStart(2,'0');
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2,'0');
+      const s = String(total % 60).padStart(2,'0');
+      return `${h}:${m}:${s}`;
+    }
+    function nextMidnight(){
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24,0,0,0);
+      return next;
+    }
+    function tickTimer(){
+      const now = new Date();
+      demoTimerEl.textContent = `Ends in ${msToHMS(nextMidnight() - now)}`;
+    }
+    tickTimer();
+    setInterval(tickTimer, 1000);
+
+    // ----------------------------
+    // DOM refs
+    // ----------------------------
+    const elOptions = document.getElementById("demo-options");
+    const elName = document.getElementById("demo-name");
+    const elReason = document.getElementById("demo-reason");
+    const elError = document.getElementById("demo-error");
+    const elSubmit = document.getElementById("demo-submit");
+    const elBars = document.getElementById("demo-bars");
+    const elReasons = document.getElementById("demo-reasons");
+    const elQuestion = document.getElementById("demo-question");
+    const elResults = document.getElementById("demo-results");
+    const elResultMsg = document.getElementById("demo-result-msg");
+    const elYouVoted = document.getElementById("demo-youvoted");
+
+    elQuestion.textContent = DEMO.question;
+
+    function setError(msg) {
+      if (!msg) { elError.classList.add("hidden"); elError.textContent = ""; return; }
+      elError.classList.remove("hidden");
+      elError.textContent = msg;
+    }
+    function wordCount(s) {
+      const t = (s || "").trim();
+      if (!t) return 0;
+      return t.split(/\s+/).length;
+    }
+
+    function renderOptions() {
+      elOptions.innerHTML = "";
+      DEMO.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className =
+          "w-full text-left bg-black/30 border border-white/10 rounded-xl px-4 py-4 font-bold text-white hover:border-bait-gold transition flex items-center justify-between";
+        btn.innerHTML = `<span>${opt.label}</span><span class="text-xs text-gray-400">Select</span>`;
+        btn.addEventListener("click", () => {
+          DEMO.selectedOption = opt.id;
+          [...elOptions.children].forEach(child => child.classList.remove("ring-2", "ring-bait-gold"));
+          btn.classList.add("ring-2", "ring-bait-gold");
+          setError("");
+        });
+        elOptions.appendChild(btn);
+      });
+      lucide.createIcons();
+    }
+
+    // ----------------------------
+    // DATA: fetch + render
+    // ----------------------------
+    async function fetchAggregates() {
+      // Get votes for today
+      const { data: votes, error } = await sb
+        .from("bait_votes")
+        .select("id, option_id, name, reason, created_at")
+        .eq("question_key", QUESTION_KEY)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      // Count votes per option
+      const counts = {};
+      DEMO.options.forEach(o => counts[o.id] = 0);
+      votes.forEach(v => { counts[v.option_id] = (counts[v.option_id] || 0) + 1; });
+
+      return { votes, counts };
+    }
+
+    function renderBars(counts) {
+      elBars.innerHTML = "";
+      const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+      DEMO.options.forEach(opt => {
+        const v = counts[opt.id] || 0;
+        const pct = total === 0 ? 0 : Math.round((v / total) * 100);
+
+        const row = document.createElement("div");
+        row.className = "space-y-2";
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-white">${opt.label}</span>
+            <span class="text-sm font-bold text-bait-gold">${pct}%</span>
+          </div>
+          <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/10">
+            <div class="h-full bg-gradient-to-r from-bait-red to-bait-orange" style="width:${pct}%"></div>
+          </div>
+          <div class="text-xs font-bold text-gray-400">${v} vote${v===1?"":"s"}</div>
+        `;
+        elBars.appendChild(row);
+      });
+    }
+
+    async function fetchReactionsForVotes(voteIds) {
+      if (!voteIds.length) return new Map();
+
+      const { data, error } = await sb
+        .from("bait_reason_reactions")
+        .select("vote_id, agree, disagree")
+        .in("vote_id", voteIds);
+
+      if (error) throw error;
+
+      const map = new Map();
+      data.forEach(r => map.set(r.vote_id, r));
+      return map;
+    }
+
+    async function renderReasons(votes) {
+      elReasons.innerHTML = "";
+
+      // only show votes that have a reason
+      const withReasons = votes.filter(v => (v.reason || "").trim().length > 0);
+      const voteIds = withReasons.map(v => v.id);
+      const reactionsMap = await fetchReactionsForVotes(voteIds);
+
+      // sort by (agree - disagree) desc
+      const enriched = withReasons.map(v => {
+        const rx = reactionsMap.get(v.id) || { agree: 0, disagree: 0 };
+        return { ...v, agree: rx.agree, disagree: rx.disagree, score: rx.agree - rx.disagree };
+      }).sort((a,b)=> b.score - a.score);
+
+      enriched.slice(0, 6).forEach(v => {
+        const card = document.createElement("div");
+        card.className = "bg-black/30 border border-white/10 rounded-xl p-4";
+
+        const optLabel = DEMO.options.find(o => o.id === v.option_id)?.label || "Answer";
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs text-gray-400 font-bold mb-1">${escapeHtml(v.name)} • <span class="text-bait-gold">${optLabel}</span></p>
+              <p class="text-white font-bold">${escapeHtml(v.reason)}</p>
+            </div>
+            <div class="flex gap-2">
+              <button data-action="agree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-gold transition">
+                👍 <span>${v.agree}</span>
+              </button>
+              <button data-action="disagree" class="px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-xs font-bold hover:border-bait-red transition">
+                👎 <span>${v.disagree}</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector('[data-action="agree"]').addEventListener("click", async () => {
+          await incrementReaction(v.id, "agree");
+        });
+        card.querySelector('[data-action="disagree"]').addEventListener("click", async () => {
+          await incrementReaction(v.id, "disagree");
+        });
+
+        elReasons.appendChild(card);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    async function incrementReaction(voteId, field) {
+      // read current
+      const { data: row, error: readErr } = await sb
+        .from("bait_reason_reactions")
+        .select("id, agree, disagree")
+        .eq("vote_id", voteId)
+        .maybeSingle();
+
+      if (readErr) { console.error(readErr); return; }
+      if (!row) return;
+
+      const next = {};
+      next[field] = (row[field] || 0) + 1;
+
+      const { error: upErr } = await sb
+        .from("bait_reason_reactions")
+        .update({ ...next, updated_at: new Date().toISOString() })
+        .eq("id", row.id);
+
+      if (upErr) console.error(upErr);
+      // realtime will refresh everyone; but we refresh self too
+      await refreshUI();
+    }
+
+    async function refreshUI() {
+      try {
+        const { votes, counts } = await fetchAggregates();
+        elResults.classList.remove("hidden");
+        renderBars(counts);
+        await renderReasons(votes);
+      } catch (e) {
+        console.error(e);
+        setError("Couldn’t load live results. Check Supabase setup.");
+      }
+    }
+
+    // ----------------------------
+    // SUBMIT VOTE (persist to DB)
+    // ----------------------------
+    async function submitVote() {
+      const already = localStorage.getItem(LS_VOTE_KEY);
+      if (already) return;
+
+      const name = (elName.value || "").trim();
+      const reason = (elReason.value || "").trim();
+
+      if (!DEMO.selectedOption) return setError("Pick an answer first.");
+      if (!name) return setError("Add a display name.");
+      if (reason && wordCount(reason) !== DEMO.ruleWords) return setError(`Your reason must be exactly ${DEMO.ruleWords} words.`);
+
+      setError("");
+
+      // Insert vote
+      const { data: inserted, error } = await sb
+        .from("bait_votes")
+        .insert([{
+          question_key: QUESTION_KEY,
+          option_id: DEMO.selectedOption,
+          name,
+          reason: reason || null
+        }])
+        .select("id")
+        .single();
+
+      if (error) {
+        console.error(error);
+        return setError("Vote failed. Try again.");
+      }
+
+      // Create reactions row (so buttons work)
+      const { error: rxErr } = await sb
+        .from("bait_reason_reactions")
+        .insert([{ vote_id: inserted.id, agree: 0, disagree: 0 }]);
+
+      if (rxErr) console.error(rxErr);
+
+      // Lock this browser for today
+      localStorage.setItem(LS_VOTE_KEY, inserted.id);
+
+      // Update UI
+      elResultMsg.textContent = "✅ Vote submitted. Live results updating…";
+      lockInputsAsVoted();
+      await refreshUI();
+    }
+
+    function lockInputsAsVoted() {
+      elSubmit.disabled = true;
+      elSubmit.classList.add("opacity-60", "cursor-not-allowed");
+      elName.disabled = true;
+      elReason.disabled = true;
+      elYouVoted.classList.remove("hidden");
+    }
+
+    elSubmit.addEventListener("click", submitVote);
+
+    // ----------------------------
+    // REALTIME: live updates for everyone
+    // ----------------------------
+    function startRealtime() {
+      const channel = sb.channel(`bait-live-${QUESTION_KEY}`);
+
+      // Votes inserted
+      channel.on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "bait_votes",
+        filter: `question_key=eq.${QUESTION_KEY}`
+      }, () => {
+        refreshUI();
+      });
+
+      // Reactions updated (agree/disagree)
+      channel.on("postgres_changes", {
+        event: "UPDATE",
+        schema: "public",
+        table: "bait_reason_reactions"
+      }, () => {
+        refreshUI();
+      });
+
+      channel.subscribe();
+    }
+
+    // ----------------------------
+    // INIT
+    // ----------------------------
+    (async function init() {
+      renderOptions();
+
+      // If you already voted today, lock the form
+      if (localStorage.getItem(LS_VOTE_KEY)) {
+        lockInputsAsVoted();
+        elResultMsg.textContent = "✅ You already voted today. Results update live.";
+      } else {
+        elResultMsg.textContent = "Results";
+      }
+
+      await refreshUI();
+      startRealtime();
+    })();
+  </script>
+</body>
+</html>
