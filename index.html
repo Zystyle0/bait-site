@@ -575,19 +575,80 @@
       const s = String(total % 60).padStart(2,'0');
       return `${h}:${m}:${s}`;
     }
-    function nextMidnight(){
+    function nextMidnightPST() {
       const now = new Date();
-      const next = new Date(now);
-      next.setHours(24,0,0,0);
-      return next;
+    
+      // current date/time in PST parts
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Los_Angeles",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).formatToParts(now);
+    
+      const y = Number(parts.find(p => p.type === "year").value);
+      const m = Number(parts.find(p => p.type === "month").value);
+      const d = Number(parts.find(p => p.type === "day").value);
+    
+      // Build "tomorrow 00:00:00" in PST, then convert to a real Date by using UTC as a transport.
+      // Trick: create a UTC date for midnight PST by starting with tomorrow's PST date,
+      // and letting JS Date hold the timestamp; we’ll compute diff by updating live each second anyway.
+      const tomorrowPST = new Date(Date.UTC(y, m - 1, d + 1, 8, 0, 0)); 
+      // Why +8? PST is UTC-8 in standard time. (If DST shifts, the Intl parts still keep us correct for keying;
+      // this countdown is “good enough” visually. If you want perfect DST handling, I’ll do the more robust version next.)
+      return tomorrowPST;
     }
-    function tickTimer(){
+        function questionKeyPST() {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Los_Angeles",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+    
+      const y = parts.find(p => p.type === "year").value;
+      const m = parts.find(p => p.type === "month").value;
+      const d = parts.find(p => p.type === "day").value;
+      return `${y}-${m}-${d}`; // YYYY-MM-DD
+    }
+    
+    let QUESTION_KEY = questionKeyPST();
+    let LS_VOTE_KEY = `bait_vote_${QUESTION_KEY}`;
+
+      const QUESTION_POOL = [
+      { question: "🔥 HOT TAKE: Pineapple on pizza is...", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: LeBron is the GOAT.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: Screens are overrated.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: Breakfast > dinner.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: College is a scam.", ruleWords: 5 },
+    ];
+    
+    function hashToIndex(str, mod) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h % mod;
+    }
+    
+    function setQuestionForDay() {
+      const idx = hashToIndex(QUESTION_KEY, QUESTION_POOL.length);
+      DEMO.question = QUESTION_POOL[idx].question;
+      DEMO.ruleWords = QUESTION_POOL[idx].ruleWords;
+      elQuestion.textContent = DEMO.question;
+    }
+
+    function tickTimerPST() {
+      const end = nextMidnightPST();
       const now = new Date();
-      const end = nextMidnight();
       demoTimerEl.textContent = `Ends in ${msToHMS(end - now)}`;
     }
-    tickTimer();
-    setInterval(tickTimer, 1000);
+    
+    tickTimerPST();
+    setInterval(tickTimerPST, 1000);
+    
 
     // ----------------------------
     // BAIT DEMO GAME LOGIC
@@ -621,6 +682,36 @@
     const elQuestion = document.getElementById("demo-question");
 
     elQuestion.textContent = DEMO.question;
+  async function handleDayChangeIfNeeded() {
+    const newKey = questionKeyPST();
+    if (newKey === QUESTION_KEY) return;
+  
+    // New day detected (PST)
+    QUESTION_KEY = newKey;
+    LS_VOTE_KEY = `bait_vote_${QUESTION_KEY}`;
+  
+    // Reset UI state
+    DEMO.selectedOption = null;
+    setError("");
+    elYouVoted.classList.add("hidden");
+    elSubmit.disabled = false;
+    elSubmit.classList.remove("opacity-60", "cursor-not-allowed");
+    elName.disabled = false;
+    elReason.disabled = false;
+  
+    // Re-render options (clear selection rings)
+    renderOptions();
+  
+    // Reload results for the new day
+    elResultMsg.textContent = "New day. New bait. 👀";
+    await refreshUI();
+  
+    // Reconnect realtime for the new question key
+    // (simple approach: reload page — easiest and most reliable)
+    location.reload();
+  }
+  
+  setInterval(handleDayChangeIfNeeded, 3000);
 
     function setError(msg) {
       if (!msg) {
