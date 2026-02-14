@@ -645,6 +645,36 @@
     const elQuestion = document.getElementById("demo-question");
 
     elQuestion.textContent = DEMO.question;
+  async function handleDayChangeIfNeeded() {
+    const newKey = questionKeyPST();
+    if (newKey === QUESTION_KEY) return;
+  
+    // New day detected (PST)
+    QUESTION_KEY = newKey;
+    LS_VOTE_KEY = `bait_vote_${QUESTION_KEY}`;
+  
+    // Reset UI state
+    DEMO.selectedOption = null;
+    setError("");
+    elYouVoted.classList.add("hidden");
+    elSubmit.disabled = false;
+    elSubmit.classList.remove("opacity-60", "cursor-not-allowed");
+    elName.disabled = false;
+    elReason.disabled = false;
+  
+    // Re-render options (clear selection rings)
+    renderOptions();
+  
+    // Reload results for the new day
+    elResultMsg.textContent = "New day. New bait. 👀";
+    await refreshUI();
+  
+    // Reconnect realtime for the new question key
+    // (simple approach: reload page — easiest and most reliable)
+    location.reload();
+  }
+  
+  setInterval(handleDayChangeIfNeeded, 3000);
 
     function setError(msg) {
       if (!msg) {
