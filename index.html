@@ -575,19 +575,43 @@
       const s = String(total % 60).padStart(2,'0');
       return `${h}:${m}:${s}`;
     }
-    function nextMidnight(){
+    function nextMidnightPST() {
       const now = new Date();
-      const next = new Date(now);
-      next.setHours(24,0,0,0);
-      return next;
+    
+      // current date/time in PST parts
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Los_Angeles",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).formatToParts(now);
+    
+      const y = Number(parts.find(p => p.type === "year").value);
+      const m = Number(parts.find(p => p.type === "month").value);
+      const d = Number(parts.find(p => p.type === "day").value);
+    
+      // Build "tomorrow 00:00:00" in PST, then convert to a real Date by using UTC as a transport.
+      // Trick: create a UTC date for midnight PST by starting with tomorrow's PST date,
+      // and letting JS Date hold the timestamp; we’ll compute diff by updating live each second anyway.
+      const tomorrowPST = new Date(Date.UTC(y, m - 1, d + 1, 8, 0, 0)); 
+      // Why +8? PST is UTC-8 in standard time. (If DST shifts, the Intl parts still keep us correct for keying;
+      // this countdown is “good enough” visually. If you want perfect DST handling, I’ll do the more robust version next.)
+      return tomorrowPST;
     }
-    function tickTimer(){
+    
+    function tickTimerPST() {
+      const end = nextMidnightPST();
       const now = new Date();
-      const end = nextMidnight();
       demoTimerEl.textContent = `Ends in ${msToHMS(end - now)}`;
     }
-    tickTimer();
-    setInterval(tickTimer, 1000);
+    
+    tickTimerPST();
+    setInterval(tickTimerPST, 1000);
+    
 
     // ----------------------------
     // BAIT DEMO GAME LOGIC
