@@ -602,7 +602,44 @@
       // this countdown is “good enough” visually. If you want perfect DST handling, I’ll do the more robust version next.)
       return tomorrowPST;
     }
+        function questionKeyPST() {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Los_Angeles",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
     
+      const y = parts.find(p => p.type === "year").value;
+      const m = parts.find(p => p.type === "month").value;
+      const d = parts.find(p => p.type === "day").value;
+      return `${y}-${m}-${d}`; // YYYY-MM-DD
+    }
+    
+    let QUESTION_KEY = questionKeyPST();
+    let LS_VOTE_KEY = `bait_vote_${QUESTION_KEY}`;
+
+      const QUESTION_POOL = [
+      { question: "🔥 HOT TAKE: Pineapple on pizza is...", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: LeBron is the GOAT.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: Screens are overrated.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: Breakfast > dinner.", ruleWords: 5 },
+      { question: "🔥 HOT TAKE: College is a scam.", ruleWords: 5 },
+    ];
+    
+    function hashToIndex(str, mod) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h % mod;
+    }
+    
+    function setQuestionForDay() {
+      const idx = hashToIndex(QUESTION_KEY, QUESTION_POOL.length);
+      DEMO.question = QUESTION_POOL[idx].question;
+      DEMO.ruleWords = QUESTION_POOL[idx].ruleWords;
+      elQuestion.textContent = DEMO.question;
+    }
+
     function tickTimerPST() {
       const end = nextMidnightPST();
       const now = new Date();
